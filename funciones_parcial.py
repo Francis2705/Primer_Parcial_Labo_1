@@ -227,6 +227,20 @@ def leer_json(diccionario: list, separador: str):
                 print(f"{personaje['nombre_especifico']} - {personaje['poder_ataque_especifico']} - {separador.join(personaje['habilidades_especificas'])}")
             else:
                 print(f"{personaje['nombre_especifico']} - {personaje['poder_ataque_especifico']}")
+#Case 8
+def incrementar_poderes(lista: list, key: str, string_existente: str):
+    lista_nuevos_nombres = []
+    for personaje in lista:
+        if string_existente in personaje[key]:
+            personaje['poder_pelea'] = personaje['poder_pelea'] + personaje['poder_pelea'] * 0.5
+            personaje['poder_ataque'] = personaje['poder_ataque'] + personaje['poder_ataque'] * 0.7
+            personaje['habilidades'].append('transformación nivel dios')
+            lista_nuevos_nombres.append(personaje['nombre'])
+    return lista_nuevos_nombres
+def hacer_csv_modificados(lista: list):
+    with open('personajes_agregados.csv', 'w', encoding = 'utf - 8') as mi_archivo:
+        for i in range(len(lista)):
+            mi_archivo.write(f'{lista[i]} recibio una nueva actualizacion sobre su poder de pelea y ataque, y se le agrego una nueva habilidad\n')
 #Generales
 def mostrar_menu(recorro_menus: list):
     """ Brief: Muestra cada opcion del menu y ademas valida lo que se ingreso.
@@ -238,7 +252,7 @@ def mostrar_menu(recorro_menus: list):
             print(opcion)
         respuesta = input("Ingrese una opcion ")
         while (respuesta != '1' and respuesta != '2' and respuesta != '3' and respuesta != '4' 
-            and respuesta != '5' and respuesta != '6' and respuesta != '7' and respuesta != '8'):
+            and respuesta != '5' and respuesta != '6' and respuesta != '7' and respuesta != '8' and respuesta != '9'):
             respuesta = input("Error. Ingrese una opcion valida: ")
         return int(respuesta)
 def mostrar_caracteristica_usuario(lista: list, caracteristca: str, separador: str):

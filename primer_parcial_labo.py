@@ -4,7 +4,7 @@ from os import system
 system('cls')
 
 menu = ['1.Traer datos desde archivo','2.Listar cantidad por raza','3.Listar personajes por raza',
-        '4.Listar personajes por habilidad y mostrar datos','5.Jugar batalla','6.Guardar Json','7.Leer Json','8.Salir']
+        '4.Listar personajes por habilidad y mostrar datos','5.Jugar batalla','6.Guardar Json','7.Leer Json','8.Incrementar poderes ','9.Salir']
 
 flag_traer_lista = False
 flag_jason = False
@@ -70,4 +70,11 @@ while True:
             else:
                 print("Primero tiene que traer los datos desde el archivo y ademas tiene que haber guardado el Json")
         case 8:
+            if flag_traer_lista == True:
+                nueva_lista_nombres_modificados = incrementar_poderes(lista_personajes, 'raza', 'Saiyan')
+                hacer_csv_modificados(nueva_lista_nombres_modificados)
+                print('Poderes incrementados')
+            else:
+                print("Primero tiene que traer los datos desde el archivo")
+        case 9:
             break
