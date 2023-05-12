@@ -194,11 +194,11 @@ def crear_json(lista: list, raza_ingresada: str, habilidad_ingresada: str, separ
         string_reemplazo_espacios = re.sub(" ","",string_unido)
         lista_separada = re.findall('[A-Z][a-záéíóúüñ]+',string_reemplazo_espacios) #empieza con mayus, sigue con minus y evalua caracteres especiales
         nombre_archivo = separador_nombre_archivo.join(lista_separada)
-        diccionario_general = {}
-        diccionario_general['data'] = []
+        diccionario_general = {} #estos van a aca porque sino se sobreescriben
+        diccionario_general['data'] = [] #estos van a aca porque sino se sobreescriben
         flag_ingreso = False
         for personaje in lista:
-            diccionario_especifico = {}
+            diccionario_especifico = {} #este va aca porque nose cuantos personajes se van a agregar, es decir, cuantos diccionarios voy a necesitar
             if raza_ingresada in personaje['raza'] and habilidad_ingresada in personaje['habilidades']:
                 flag_ingreso = True
                 diccionario_especifico['nombre_especifico'] = personaje['nombre']
@@ -286,10 +286,6 @@ def normalizar_caracteres(lista: list, key: str):
     """ Return: No tiene retorno """
     if len(lista) != 0:
         for personaje in lista:
-            if len(personaje[key]) == 1:
-                nuevo_dato = unidecode(personaje[key][0])
-                personaje[key][0] = nuevo_dato
-            else:
-                for i in range(len(personaje[key])):
-                    nuevo_dato = unidecode(personaje[key][i])
-                    personaje[key][i] = nuevo_dato
+            for i in range(len(personaje[key])): #no hace falta que pregunte si hay uno solo porque minimo va a haber uno y como minimo el for va a iterar una vez
+                nuevo_dato = unidecode(personaje[key][i])
+                personaje[key][i] = nuevo_dato
