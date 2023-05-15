@@ -43,11 +43,9 @@ while True:
                 mostrar_caracteristica_usuario(lista_personajes, 'nombre', ' | ')
                 nombre_personaje_seleccionado_validado = validar_ingreso_caracteristica(lista_personajes, 'nombre')
                 poder_de_ataque_seleccionado = buscar_poder(lista_personajes, nombre_personaje_seleccionado_validado, 'poder_ataque')
-                
                 id_personaje_aleatorio = random.randint(1, len(lista_personajes))
                 nombre_personaje_aleatorio = buscar_igualdad_nombre(lista_personajes, id_personaje_aleatorio)
                 poder_de_ataque_aleatorio = buscar_poder(lista_personajes, id_personaje_aleatorio, 'poder_ataque')
-                
                 guardar_pelea(poder_de_ataque_seleccionado, poder_de_ataque_aleatorio, nombre_personaje_seleccionado_validado, nombre_personaje_aleatorio)
                 print('La pelea a sido guardada')
             else:
@@ -56,10 +54,8 @@ while True:
             if flag_traer_lista == True:
                 mostrar_caracteristica_usuario(lista_personajes, 'raza', ' | ')
                 raza_validada = validar_ingreso_caracteristica(lista_personajes, 'raza')
-
                 mostrar_caracteristica_usuario(lista_personajes, 'habilidades', ' | ')
                 habilidad_validada = validar_ingreso_caracteristica(lista_personajes, 'habilidades')
-
                 diccionario_personajes_especificos = crear_json(lista_personajes, raza_validada, habilidad_validada)
                 if diccionario_personajes_especificos != None:
                     flag_jason = True

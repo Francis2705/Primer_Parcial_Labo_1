@@ -19,7 +19,7 @@ def parser_csv(archivo: str):
     se encuentre la ','. Eso genera que se separe en una lista, cada carateristica especifica. Luego, se crea un diccionario para cada personaje, el cual
     va a contener determinadas keys. Se castean los datos numericos y las razas y las habilidades son analizadas en base a si existe mas de una. Se utilizan 
     expresiones regulares para lograr un correcto resultado de las razas y habilidades. El codigo solo se ejecuta, si el archivo contiene la secuencia '.csv' """
-    """ Parameters: archivo, modo """
+    """ Parameters: archivo """
     """ Return: Se retorna la lista completa, la cual contiene todos los datos del archivo indicado. En base a esta lista, se trabajara en los siguientes puntos. """
     if '.csv' in archivo:
         lista_completa = []
@@ -62,7 +62,7 @@ def contar_caracteristica(lista: list, key: str):
 def mostrar_lista(diccionario_prints: dict):
     """ Brief: Se recorre el diccionario, haciendo un print el cual muestra cuantos valores coinciden con la key evaluada. Esta funcion, esta en relacion de la
     funcion 'contar_caracteristia'. El codigo solo se ejecuta si el diccionario pasado por parametro no esta vacio """
-    """ Parameters: diccionario_prints, tipo """
+    """ Parameters: diccionario_prints """
     """ Return: No tiene """
     if len(diccionario_prints) != 0:
         for key in diccionario_prints:
@@ -91,9 +91,8 @@ def mostrar_lista_separada(diccionario_a_separar: dict):
     """ Brief: Se recorre el diccionario, haciendo un print el cual muestra los personajes que cumplen con esa key, y a parte, como se sabe que el nombre esta en
     la primer posicion, y el poder de ataque en la segunda, se usa otro for para printear esos datos. El codigo solo se ejecuta si el diccionario 
     pasado por parametro no esta vacio """
-    """ Parameters: diccionario_prints, tipo """
+    """ Parameters: diccionario_a_separar """
     """ Return: No tiene """
-    print(diccionario_a_separar)
     if len(diccionario_a_separar) != 0:
         for dato in diccionario_a_separar:
             print(f"\n'{dato}':")
@@ -184,9 +183,8 @@ def crear_json(lista: list, raza_ingresada: str, habilidad_ingresada: str):
     Si sucede el caso de que exista una sola habilidad, esta se elimina y no se crea ninguna key 'habilidades_especificas'. Finalmente, se crea 
     (o se sobreescribe sino es la primera vez que se ingreso) un archivo .json en el cual se guarda el diccionario creado con el/los diccionarios agregados,
     los cuales estan dentro de una lista. El codigo solo se ejecuta si la lista pasada por parametro tiene al menos un elemento """
-    """ Parameters: lista, raza_ingresada, habilidad_ingresada, separador_nombre_archivo """
-    """ Return: Solo se retorna el diccionario si existe la raza ingresada y la habilidad ingresada en el mismo personaje. Sino, se muestra un print
-    informando que no hay coincidencia"""
+    """ Parameters: lista, raza_ingresada, habilidad_ingresada """
+    """ Return: Solo se retorna el diccionario si existe la raza ingresada y la habilidad ingresada en el mismo personaje. Sino, se retorna None """
     if len(lista) != 0:
         nombre_del_archivo = crear_nombre_json(raza_ingresada, habilidad_ingresada)
         diccionario_general = {}
@@ -242,7 +240,7 @@ def incrementar_poderes(lista: list, key: str, string_existente: str):
 def hacer_csv_modificados(lista: list):
     with open('personajes_agregados.csv', 'w', encoding = 'utf-8') as mi_archivo:
         for personaje in lista:
-            nuevo_registro = '\n{0},{1},{2},{3},{4},{5}'.format(personaje['id'],personaje['nombre'],personaje['raza'],
+            nuevo_registro = '{0},{1},{2},{3},{4},{5}\n'.format(personaje['id'],personaje['nombre'],personaje['raza'],
                                                                 personaje['poder_pelea'],personaje['poder_ataque'],personaje['habilidades'])
             mi_archivo.write(nuevo_registro)
 #Generales
