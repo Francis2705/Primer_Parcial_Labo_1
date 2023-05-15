@@ -4,14 +4,14 @@ import json
 from unidecode import unidecode
 
 #Case 1
-def sacar_espacios_caracteristica(lista: list):
+def sacar_espacios_caracteristica_minusculas(lista: list):
     """ Brief: Le saca los posibles espacios a la izquierda y/o derecha del string. El codigo solo se ejecuta si la lista pasada por parametro tiene al menos
     un elemento"""
     """ Parameters: lista """
     """ Return: Devuelve la nueva lista, y sus valores ya no tienen espacios a sus costados. """
     if len(lista) != 0:
         for i in range(len(lista)): #le saco el espacio a la caracteristica y la reemplazo
-            caracteristica_sin_espacios = lista[i].strip()
+            caracteristica_sin_espacios = lista[i].strip().lower()
             lista[i] = caracteristica_sin_espacios
         return lista
 def parser_csv(archivo: str):
@@ -28,95 +28,82 @@ def parser_csv(archivo: str):
                 lista = re.split(',', linea)
                 un_diccionario = {}
                 un_diccionario['id'] = int(lista[0])
-                un_diccionario['nombre'] = lista[1].strip()
+                un_diccionario['nombre'] = lista[1].strip().lower()
                 lista_razas = re.split('-', lista[2])
-                un_diccionario['raza'] = lista_razas
+                nueva_lista_razas = sacar_espacios_caracteristica_minusculas(lista_razas)
+                un_diccionario['raza'] = nueva_lista_razas
                 un_diccionario['poder_pelea'] = int(lista[3])
                 un_diccionario['poder_ataque'] = int(lista[4])
                 lista_habilidades_separadas = re.split(r"[|$%]+", lista[5]) #separo habilidades por esa secuencia
                 string_sin_contrabarra = re.sub(r'\\n','', lista_habilidades_separadas[-1]) #elimino el '\n' que aparece en la ult posicion
                 lista_habilidades_separadas[-1] = string_sin_contrabarra
-                nueva_lista = sacar_espacios_caracteristica(lista_habilidades_separadas)
+                nueva_lista = sacar_espacios_caracteristica_minusculas(lista_habilidades_separadas)
                 un_diccionario['habilidades'] = nueva_lista
                 lista_completa.append(un_diccionario)
         return lista_completa
 #Case 2
 def contar_caracteristica(lista: list, key: str):
     """ Brief: Se crea un diccionario, el cual va a contener como keys, los valores de cada key pasada como parametro, respecto de los diccionarios que esten dentro
-    de la lista pasada como parametro. Se toma el valor de cada key, y primero se pregunta si solamente se evalua un valor o mas de uno. Si solo hay un valor,
-    se pregunta si ese valor ya existe en el diccionario. Si ya existe, se le suma uno, y sino, se crea una key con ese nombre y se le asigna como valor un 1.
-    En caso de que el valor de la cantidad de la key sea mayor a 1, se repite el proceso mencionado anteriormente, pero esta vez, dentro de un for que 
-    recorre esa lista con mas de un valor y evalua cada dato. El codigo solo se ejecuta si la lista pasada por parametro tiene al menos un elemento """
-    """ Parameters: lista, caracteristica """
+    de la lista pasada como parametro. Se toma el valor de cada key, y se itera a traves de ese valor, el cual es una lista. Se pregunta si el/los datos 
+    pertenecientes a ese valor, ya existen en el diccionario. Si es asi, se le suma uno, y sino, se crea una key con ese nombre y se le asigna como valor un 1. 
+    El codigo solo se ejecuta si la lista pasada por parametro tiene al menos un elemento """
+    """ Parameters: lista, key """
     """ Return: Devuelve un diccionario con sus respectivas keys y un valor numerico representando la cantidad de personajes que cumplen con esa key. """
     if len(lista) != 0:
         diccionario_caracteristica = {}
         for personaje in lista:
             valor_de_caracteristica = personaje[key]
-            if len(valor_de_caracteristica) == 1:
-                if valor_de_caracteristica[0] not in diccionario_caracteristica:
-                    diccionario_caracteristica[valor_de_caracteristica[0]] = 1
+            for dato in valor_de_caracteristica:
+                if dato not in diccionario_caracteristica:
+                    diccionario_caracteristica[dato] = 1
                 else:
-                    diccionario_caracteristica[valor_de_caracteristica[0]] += 1
-            else:
-                for dato in valor_de_caracteristica:
-                    if dato not in diccionario_caracteristica:
-                        diccionario_caracteristica[dato] = 1
-                    else:
-                        diccionario_caracteristica[dato] += 1
+                    diccionario_caracteristica[dato] += 1
         return diccionario_caracteristica
-def mostrar_lista(diccionario_prints: dict, tipo: str):
+def mostrar_lista(diccionario_prints: dict):
     """ Brief: Se recorre el diccionario, haciendo un print el cual muestra cuantos valores coinciden con la key evaluada. Esta funcion, esta en relacion de la
     funcion 'contar_caracteristia'. El codigo solo se ejecuta si el diccionario pasado por parametro no esta vacio """
     """ Parameters: diccionario_prints, tipo """
     """ Return: No tiene """
     if len(diccionario_prints) != 0:
         for key in diccionario_prints:
-            print(f"La cantidad de personajes con {tipo} '{key}' es {diccionario_prints[key]}")
+            print(f"'{key}': {diccionario_prints[key]}")
 #Case 3
 def listar_personajes_por_caracateristica(lista: list, caracateristica: str, key1: str, key2: str):
     """ Brief: Se crea un diccionario, el cual va a contener como keys, los valores de cada caracteristica pasada como parametro, respecto de los diccionarios 
-    que esten dentro de la lista pasada como parametro. Se toma el valor de cada key, y primero se pregunta si solamente se evalua un valor o mas de uno. 
-    Si solo hay un valor, se pregunta si ese valor ya existe en el diccionario. Si ya existe, se agrega como valor de la key, el valor de la key1 y key2
-    pasadas por parametro. Si no existe, se crea una key con ese valor y se le asigna el valor de la key1 y key2 pasadas por parametro. En caso de que el valor 
-    de la cantidad de la key sea mayor a 1, se repite el proceso mencionado anteriormente, pero esta vez, dentro de un for que recorre esa lista con mas de un valor 
-    y evalua cada dato. El codigo solo se ejecuta si la lista pasada por parametro tiene al menos un elemento """
+    que esten dentro de la lista pasada como parametro. Se toma el valor de cada key, y se itera a traves de ese valor el cual es una lista. Se pregunta si 
+    el/los datos pertenecientes a ese valor, ya existen en el diccionario. Si ya existe, se agrega como valor de la key, el valor de la key1 y key2 pasadas 
+    por parametro. Si no existe, se crea una key con ese valor y se le asigna el valor de la key1 y key2 pasadas por parametro. El codigo solo se ejecuta 
+    si la lista pasada por parametro tiene al menos un elemento """
     """ Parameters: lista, caracteristica, key1, key2 """
     """ Return: Devuelve un diccionario con sus respectivas keys como valor de esas keys, los valores solicitados """
     if len(lista) != 0:
         diccionario_por_caracteristica = {}
         for personaje in lista:
             valor_de_caracteristica = personaje[caracateristica] #siempre va a ser una lista
-            if len(valor_de_caracteristica) == 1:
-                if valor_de_caracteristica[0] in diccionario_por_caracteristica:
-                    diccionario_por_caracteristica[valor_de_caracteristica[0]].append(personaje[key1]) #el append se va a poder hacer, porque ya se ejecuto el else
-                    diccionario_por_caracteristica[valor_de_caracteristica[0]].append(personaje[key2])
+            for dato in valor_de_caracteristica:
+                if dato in diccionario_por_caracteristica:
+                    diccionario_por_caracteristica[dato].append(personaje[key1]) #el append se va a poder hacer, porque ya se ejecuto el else
+                    diccionario_por_caracteristica[dato].append(personaje[key2])
                 else:
-                    diccionario_por_caracteristica[valor_de_caracteristica[0]] = [personaje[key1], personaje[key2]] #el valor de esa key, siempre es una lista
-            else:
-                for dato in valor_de_caracteristica:
-                    if dato in diccionario_por_caracteristica:
-                        diccionario_por_caracteristica[dato].append(personaje[key1])
-                        diccionario_por_caracteristica[dato].append(personaje[key2])
-                    else:
-                        diccionario_por_caracteristica[dato] = [personaje[key1], personaje[key2]]
+                    diccionario_por_caracteristica[dato] = [personaje[key1], personaje[key2]] #el valor de esa key, siempre es una lista
         return diccionario_por_caracteristica
-def mostrar_lista_separada(diccionario_a_separar: dict, tipo: str):
+def mostrar_lista_separada(diccionario_a_separar: dict):
     """ Brief: Se recorre el diccionario, haciendo un print el cual muestra los personajes que cumplen con esa key, y a parte, como se sabe que el nombre esta en
     la primer posicion, y el poder de ataque en la segunda, se usa otro for para printear esos datos. El codigo solo se ejecuta si el diccionario 
     pasado por parametro no esta vacio """
     """ Parameters: diccionario_prints, tipo """
     """ Return: No tiene """
+    print(diccionario_a_separar)
     if len(diccionario_a_separar) != 0:
         for dato in diccionario_a_separar:
-            print(f"\nLos personajes con {tipo} '{dato}' son:")
+            print(f"\n'{dato}':")
             for valor in diccionario_a_separar[dato]:
                 if type(valor) == str:
                     nombre = valor
-                    print(f"Nombre: {nombre}", end = "")
+                    print(f"{nombre}", end = "")
                 else:
                     poder = valor
-                    print(f" | Poder de ataque: {poder}")
+                    print(f" | {poder}")
 #Case 4
 def promediar_dos_datos(num1: float, num2: float):
     """ Brief: Se hace el promedio de dos numeros """
@@ -135,7 +122,7 @@ def mostrar_personajes_por_caracteristica_con_datos(lista: list, caracteristica_
         for personaje in lista:
             if caracteristica_especifica_validada in personaje[key]:
                 print(f"\nNombre: {personaje['nombre']}")
-                print(f"Raza: {separador.join(personaje['raza'])}") #si hay una sola, devuelve el mismo valor sin ningun separador
+                print(f"Raza: {separador.join(personaje['raza'])}")
                 promedio = promediar_dos_datos(personaje['poder_pelea'], personaje['poder_ataque'])
                 print(f"Promedio entre poder de pelea y poder de ataque: {promedio}\n")
 #Case 5
@@ -179,23 +166,31 @@ def guardar_pelea(poder_selec: int, poder_ale: int, string_selec: str, string_al
         with open('peleas.txt', 'a', encoding = 'utf-8') as un_archivo:
             un_archivo.write(f'{datetime.datetime.now()} - Empataron {string_selec} y {string_ale}\n')
 #Case 6 y 7
-def crear_json(lista: list, raza_ingresada: str, habilidad_ingresada: str, separador_nombre_archivo: str):
-    """ Brief: La funcion se divide en dos partes: primero, se crea el nombre del archivo con el formato solicitado. Luego, se crea un diccionario, el cual
-    va a tener como key 'data', y 'data' va a tener como valor una lista. Dentro de esa lista, si la raza ingresada y la habilidad ingresada coinciden en el 
-    mismo personaje, se crea un diccionario para este y se guardan los datos pedidos, exeptuando la habilidad ingresada. Si sucede el caso de que exista 
-    una sola habilidad, esta se elimina y no se crea ninguna key 'habilidades_especificas'. Finalmente, se crea (o se sobreescribe sino es la primera 
-    vez que se ingreso) un archivo .json en el cual se guarda el diccionario creado con el/los diccionarios agregados, los cuales estan dentro de una lista.
-    El codigo solo se ejecuta si la lista pasada por parametro tiene al menos un elemento """
+def crear_nombre_json(raza_ingresada1: str, habilidad_ingresada1: str):
+    """ Brief: Se crea el nombre del archivo con el formato solicitado. """
+    """ Parameters: raza_ingresada1, habilidad_ingresada1 """
+    """ Return: Retorna el nombre del archivo con el formato requerido """
+    string_unido = raza_ingresada1 + ' ' + habilidad_ingresada1
+    lista_nuevo_string = re.split(' ', string_unido)
+    for i in range(len(lista_nuevo_string)):
+        primera_mayus = lista_nuevo_string[i].capitalize()
+        lista_nuevo_string[i] = primera_mayus
+    separador = '_'
+    nombre_archivo = separador.join(lista_nuevo_string)
+    return  nombre_archivo
+def crear_json(lista: list, raza_ingresada: str, habilidad_ingresada: str):
+    """ Brief: Se crea un diccionario, el cual va a tener como key 'data', y 'data' va a tener como valor una lista. Dentro de esa lista, si la raza ingresada 
+    y la habilidad ingresada coinciden en el mismo personaje, se crea un diccionario para este y se guardan los datos pedidos, exeptuando la habilidad ingresada. 
+    Si sucede el caso de que exista una sola habilidad, esta se elimina y no se crea ninguna key 'habilidades_especificas'. Finalmente, se crea 
+    (o se sobreescribe sino es la primera vez que se ingreso) un archivo .json en el cual se guarda el diccionario creado con el/los diccionarios agregados,
+    los cuales estan dentro de una lista. El codigo solo se ejecuta si la lista pasada por parametro tiene al menos un elemento """
     """ Parameters: lista, raza_ingresada, habilidad_ingresada, separador_nombre_archivo """
     """ Return: Solo se retorna el diccionario si existe la raza ingresada y la habilidad ingresada en el mismo personaje. Sino, se muestra un print
     informando que no hay coincidencia"""
     if len(lista) != 0:
-        string_unido = raza_ingresada + habilidad_ingresada
-        string_reemplazo_espacios = re.sub(" ","",string_unido)
-        lista_separada = re.findall('[A-Z][a-záéíóúüñ]+',string_reemplazo_espacios) #empieza con mayus, sigue con minus y evalua caracteres especiales
-        nombre_archivo = separador_nombre_archivo.join(lista_separada)
-        diccionario_general = {} #estos van a aca porque sino se sobreescriben
-        diccionario_general['data'] = [] #estos van a aca porque sino se sobreescriben
+        nombre_del_archivo = crear_nombre_json(raza_ingresada, habilidad_ingresada)
+        diccionario_general = {}
+        diccionario_general['data'] = []
         flag_ingreso = False
         for personaje in lista:
             diccionario_especifico = {} #este va aca porque nose cuantos personajes se van a agregar, es decir, cuantos diccionarios voy a necesitar
@@ -209,14 +204,14 @@ def crear_json(lista: list, raza_ingresada: str, habilidad_ingresada: str, separ
                         if habilidad != habilidad_ingresada:
                             diccionario_especifico['habilidades_especificas'].append(habilidad)
                 diccionario_general['data'].append(diccionario_especifico)
-                with open(f'{nombre_archivo}.json', 'w', encoding = 'utf-8') as mi_archivo:
+                with open(f'{nombre_del_archivo}.json', 'w', encoding = 'utf-8') as mi_archivo:
                     json.dump(diccionario_general, mi_archivo, indent = 4)
         if flag_ingreso == False:
-            print("No hay personajes que coincidan con esa raza y con esa habilidad. No se guardo ningun archivo")
+            return None
         else:
             print("Archivo guardado con exito")
             return diccionario_general
-def leer_json(diccionario: list, separador: str):
+def leer_json(diccionario: dict, separador: str):
     """ Brief: Se recorrer el diccionario, priteando con el formato solicitado la informacion existente. El codigo solo se ejecuta si el diccionario 
     pasado por parametro tiene al menos un elemento """
     """ Parameters: lista, separador """
@@ -232,15 +227,24 @@ def incrementar_poderes(lista: list, key: str, string_existente: str):
     lista_nuevos_nombres = []
     for personaje in lista:
         if string_existente in personaje[key]:
+            personaje_diccionario = {}
+            personaje_diccionario['id'] = personaje['id']
+            personaje_diccionario['nombre'] = personaje['nombre']
+            personaje_diccionario['raza'] = personaje['raza']
             personaje['poder_pelea'] = personaje['poder_pelea'] + personaje['poder_pelea'] * 0.5
+            personaje_diccionario['poder_pelea'] = personaje['poder_pelea']
             personaje['poder_ataque'] = personaje['poder_ataque'] + personaje['poder_ataque'] * 0.7
+            personaje_diccionario['poder_ataque'] = personaje['poder_ataque']
             personaje['habilidades'].append('transformación nivel dios')
-            lista_nuevos_nombres.append(personaje['nombre'])
+            personaje_diccionario['habilidades'] = personaje['habilidades']
+            lista_nuevos_nombres.append(personaje_diccionario)
     return lista_nuevos_nombres
 def hacer_csv_modificados(lista: list):
-    with open('personajes_agregados.csv', 'w', encoding = 'utf - 8') as mi_archivo:
-        for i in range(len(lista)):
-            mi_archivo.write(f'{lista[i]} recibio una nueva actualizacion sobre su poder de pelea y ataque, y se le agrego una nueva habilidad\n')
+    with open('personajes_agregados.csv', 'w', encoding = 'utf-8') as mi_archivo:
+        for personaje in lista:
+            nuevo_registro = '\n{0},{1},{2},{3},{4},{5}'.format(personaje['id'],personaje['nombre'],personaje['raza'],
+                                                                personaje['poder_pelea'],personaje['poder_ataque'],personaje['habilidades'])
+            mi_archivo.write(nuevo_registro)
 #Generales
 def mostrar_menu(recorro_menus: list):
     """ Brief: Muestra cada opcion del menu y ademas valida lo que se ingreso.
@@ -284,10 +288,10 @@ def validar_ingreso_caracteristica(lista: list, key: str):
         flag_primer_ingreso = False
         while flag_primer_ingreso == False or flag_existe == False:
             if flag_primer_ingreso == False:
-                caracteristica_ingresada = input("Seleccione el dato: ")
+                caracteristica_ingresada = input("Seleccione el dato: ").lower()
                 flag_primer_ingreso = True
             else:
-                caracteristica_ingresada = input("Error, seleccione un dato valido: ")
+                caracteristica_ingresada = input("Error, seleccione un dato valido: ").lower()
             for personaje in lista:
                 if caracteristica_ingresada in personaje[key]:
                     flag_existe = True

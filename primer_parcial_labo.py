@@ -22,13 +22,13 @@ while True:
         case 2:
             if flag_traer_lista == True:
                 resultado = contar_caracteristica(lista_personajes, 'raza')
-                mostrar_lista(resultado, 'raza')
+                mostrar_lista(resultado)
             else:
                 print("Primero tiene que traer los datos desde el archivo")
         case 3:
             if flag_traer_lista == True:
                 resultado = listar_personajes_por_caracateristica(lista_personajes, 'raza', 'nombre', 'poder_ataque')
-                mostrar_lista_separada(resultado, 'raza')
+                mostrar_lista_separada(resultado)
             else:
                 print("Primero tiene que traer los datos desde el archivo")
         case 4:
@@ -60,8 +60,11 @@ while True:
                 mostrar_caracteristica_usuario(lista_personajes, 'habilidades', ' | ')
                 habilidad_validada = validar_ingreso_caracteristica(lista_personajes, 'habilidades')
 
-                diccionario_personajes_especificos = crear_json(lista_personajes, raza_validada, habilidad_validada, '_')
-                flag_jason = True
+                diccionario_personajes_especificos = crear_json(lista_personajes, raza_validada, habilidad_validada)
+                if diccionario_personajes_especificos != None:
+                    flag_jason = True
+                else:
+                    print("No hay personajes que coincidan con esa raza y con esa habilidad. No se guardo ningun archivo")
             else:
                 print("Primero tiene que traer los datos desde el archivo")
         case 7:
@@ -71,7 +74,7 @@ while True:
                 print("Primero tiene que traer los datos desde el archivo y ademas tiene que haber guardado el Json")
         case 8:
             if flag_traer_lista == True:
-                nueva_lista_nombres_modificados = incrementar_poderes(lista_personajes, 'raza', 'Saiyan')
+                nueva_lista_nombres_modificados = incrementar_poderes(lista_personajes, 'raza', 'saiyan')
                 hacer_csv_modificados(nueva_lista_nombres_modificados)
                 print('Poderes incrementados')
             else:
