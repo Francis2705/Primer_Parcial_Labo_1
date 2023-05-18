@@ -222,27 +222,80 @@ def leer_json(diccionario: dict, separador: str):
                 print(f"{personaje['nombre_especifico']} - {personaje['poder_ataque_especifico']}")
 #Case 8
 def incrementar_poderes(lista: list, key: str, string_existente: str):
-    lista_nuevos_nombres = []
-    for personaje in lista:
-        if string_existente in personaje[key]:
-            personaje_diccionario = {}
-            personaje_diccionario['id'] = personaje['id']
-            personaje_diccionario['nombre'] = personaje['nombre']
-            personaje_diccionario['raza'] = personaje['raza']
-            personaje['poder_pelea'] = personaje['poder_pelea'] + personaje['poder_pelea'] * 0.5
-            personaje_diccionario['poder_pelea'] = personaje['poder_pelea']
-            personaje['poder_ataque'] = personaje['poder_ataque'] + personaje['poder_ataque'] * 0.7
-            personaje_diccionario['poder_ataque'] = personaje['poder_ataque']
-            personaje['habilidades'].append('transformación nivel dios')
-            personaje_diccionario['habilidades'] = personaje['habilidades']
-            lista_nuevos_nombres.append(personaje_diccionario)
-    return lista_nuevos_nombres
-def hacer_csv_modificados(lista: list):
-    with open('personajes_agregados.csv', 'w', encoding = 'utf-8') as mi_archivo:
+    """ Brief: Incrementa los poderes de los personajes de cierta caracteristica y agrega una habilidad especifica. El codigo solo se ejecuta si la 
+    lista pasada por parametro tiene al menos un elemento """
+    """ Parameters: lista, key, string_existente """
+    """ Return: Retorna los personajes que fueron modificados y sus datos """
+    if len(lista) != 0:
+        lista_nuevos_nombres = []
         for personaje in lista:
-            nuevo_registro = '{0},{1},{2},{3},{4},{5}\n'.format(personaje['id'],personaje['nombre'],personaje['raza'],
-                                                                personaje['poder_pelea'],personaje['poder_ataque'],personaje['habilidades'])
-            mi_archivo.write(nuevo_registro)
+            if string_existente in personaje[key]:
+                personaje_diccionario = {}
+                personaje_diccionario['id'] = personaje['id']
+                personaje_diccionario['nombre'] = personaje['nombre']
+                personaje_diccionario['raza'] = personaje['raza']
+                personaje['poder_pelea'] = personaje['poder_pelea'] + personaje['poder_pelea'] * 0.5
+                personaje_diccionario['poder_pelea'] = personaje['poder_pelea']
+                personaje['poder_ataque'] = personaje['poder_ataque'] + personaje['poder_ataque'] * 0.7
+                personaje_diccionario['poder_ataque'] = personaje['poder_ataque']
+                personaje['habilidades'].append('transformación nivel dios')
+                personaje_diccionario['habilidades'] = personaje['habilidades']
+                lista_nuevos_nombres.append(personaje_diccionario)
+        return lista_nuevos_nombres
+def hacer_csv_modificados(lista: list, separador: str):
+    """ Brief: Crea un archivo csv en el cual van a estar los datos de los personajes que sufrieron una modificacion de sus poderes y habilidades.
+    El codigo solo se ejecuta si la lista pasada por parametro tiene al menos un elemento """
+    """ Parameters: lista, separador """
+    """ Return: No tiene """
+    if len(lista) != 0:
+        with open('personajes_agregados.csv', 'w', encoding = 'utf-8') as mi_archivo:
+            for personaje in lista:
+                nuevo_registro = '\n{0},{1},{2},{3},{4},{5}'.format(personaje['id'],personaje['nombre'],personaje['raza'][0],
+                                                                    personaje['poder_pelea'],personaje['poder_ataque'], separador.join(personaje['habilidades']))
+                mi_archivo.write(nuevo_registro)
+#Case 9
+def crear_diccionario_caracteristica_personajes(lista: list, key_principal: str):
+    """ Brief: Crea un diccionario, el cual va a tener como keys, los valores principales que identifican a los personajes. Esas keys, a su vez, van a tener
+    como valor, una lista, la cual va a tener como unico valor, un diccionario, en el cual se va a almacenar la informacion requerida. Se toma el valor del
+    personaje en la key_principal, y se recorre; a su vez, se evalua si ya existe en el diccionario principal (es decir, el que va a almacenar toda la informacion).
+    Si no existe, se crea una lista, la cual va a contener un diccionario con los datos pedidos del personaje. Si ya existe, esos datos van a ser modificados y
+    sobreescritos. Se hace uso de diccionarios y listas para un correcto orden de la informacion, y se usa un modelo similiar al formato JSON. El codigo solo 
+    se ejecuta si la lista pasada por parametro tiene al menos un elemento """
+    """ Parameters: lista, key_principal """
+    """ Return: Retorna el diccionario con todos los datos """
+    if len(lista) != 0:
+        diccionario_de_key_principal = {}
+        for personaje in lista:
+            datos_varios = personaje[key_principal]
+            for dato in datos_varios:
+                if dato not in diccionario_de_key_principal:
+                    diccionario_de_key_principal[dato] = []
+                    un_diccionario = {}
+                    un_diccionario['cantidad'] = 1
+                    un_diccionario['nombres'] = []
+                    un_diccionario['nombres'].append(personaje['nombre'])
+                    un_diccionario['poder_y_ataque'] = []
+                    un_diccionario['poder_y_ataque'].append(personaje['poder_ataque'])
+                    diccionario_de_key_principal[dato].append(un_diccionario)
+                else:
+                    for diccionario in diccionario_de_key_principal[dato]:
+                        diccionario['cantidad'] += 1
+                        diccionario['nombres'].append(personaje['nombre'])
+                        diccionario['poder_y_ataque'].append(personaje['poder_ataque'])
+        return diccionario_de_key_principal
+def mostrar_diccionario_completo(diccionario_completo: dict):
+    """ Brief: Muestra el diccionario recibido con sus datos. Se hace uso de listas paralelas, ya que la cantidad de nombres es igual a la cantidad de poderes.
+    El codigo solo se ejecuta si el diccionario pasado por parametro tiene al menos un elemento """
+    """ Parameters: diccionario_completo """
+    """ Return: No tiene """
+    if len(diccionario_completo) != 0:
+        for dato in diccionario_completo:
+            print(f'\n{dato} -> ', end = "")
+            for key in diccionario_completo[dato]:
+                print(f"{key['cantidad']}")
+                for i in range(len(key['nombres'])):
+                    print(f"{key['nombres'][i]} --- ", end = "")
+                    print(f"{key['poder_y_ataque'][i]}")
 #Generales
 def mostrar_menu(recorro_menus: list):
     """ Brief: Muestra cada opcion del menu y ademas valida lo que se ingreso.
@@ -254,7 +307,7 @@ def mostrar_menu(recorro_menus: list):
             print(opcion)
         respuesta = input("Ingrese una opcion ")
         while (respuesta != '1' and respuesta != '2' and respuesta != '3' and respuesta != '4' 
-            and respuesta != '5' and respuesta != '6' and respuesta != '7' and respuesta != '8' and respuesta != '9'):
+            and respuesta != '5' and respuesta != '6' and respuesta != '7' and respuesta != '8' and respuesta != '9' and respuesta != '10'):
             respuesta = input("Error. Ingrese una opcion valida: ")
         return int(respuesta)
 def mostrar_caracteristica_usuario(lista: list, caracteristca: str, separador: str):
