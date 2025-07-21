@@ -1,0 +1,6 @@
+personajes_agregados.csv
+peleas.txt
+*.json
+__pycache__/
+*.py[cod]
+*.pyo

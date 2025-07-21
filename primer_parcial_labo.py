@@ -47,7 +47,8 @@ while True:
                 id_personaje_aleatorio = random.randint(1, len(lista_personajes))
                 nombre_personaje_aleatorio = buscar_igualdad_nombre(lista_personajes, id_personaje_aleatorio)
                 poder_de_ataque_aleatorio = buscar_poder(lista_personajes, id_personaje_aleatorio, 'poder_ataque')
-                guardar_pelea(poder_de_ataque_seleccionado, poder_de_ataque_aleatorio, nombre_personaje_seleccionado_validado, nombre_personaje_aleatorio)
+                guardar_pelea(poder_de_ataque_seleccionado, poder_de_ataque_aleatorio, nombre_personaje_seleccionado_validado,
+                            nombre_personaje_aleatorio)
                 print('La pelea a sido guardada')
             else:
                 print("Primero tiene que traer los datos desde el archivo")
