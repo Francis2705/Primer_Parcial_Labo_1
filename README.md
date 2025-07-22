@@ -1,4 +1,4 @@
-# Proyecto: Manejo de datos y archivos con Python (csv, json, txt)
+# Manejo de datos y archivos con Python (csv, json, txt)
 
 Este proyecto consiste en un sistema de análisis y manipulación de datos de personajes, utilizando archivos en formatos csv, json y txt. Está implementado en Python y organizado en torno a un menú interactivo que permite ejecutar diversas funciones relacionadas con la lectura, transformación, análisis, guardado y visualización de información.
 
