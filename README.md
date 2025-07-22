@@ -2,8 +2,6 @@
 
 Este proyecto consiste en un sistema de análisis y manipulación de datos de personajes, utilizando archivos en formatos csv, json y txt. Está implementado en Python y organizado en torno a un menú interactivo que permite ejecutar diversas funciones relacionadas con la lectura, transformación, análisis, guardado y visualización de información.
 
-<img src="video_ejemplo.gif" width="1500" height="750">
-
 ## 📂 Estructura del proyecto
 
 - `primer_parcial_labo.py`: Script principal que muestra un menú para interactuar con los datos.
